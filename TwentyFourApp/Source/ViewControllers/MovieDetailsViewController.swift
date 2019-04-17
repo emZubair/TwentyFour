@@ -12,6 +12,7 @@ class MovieDetailsViewController : BaseViewController {
     
     var movieID:Int? = nil
     var videoID:String? = nil
+    @IBOutlet weak var containerScrollView: UIScrollView!
     
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var genreLbl: UILabel!
@@ -24,15 +25,18 @@ class MovieDetailsViewController : BaseViewController {
     @IBOutlet weak var overviewTextView: UITextView!
     
     
-    override func viewDidLoad() {
-        self.title = "MOVIE_DETAILS".localize()
-        self.navigationController?.navigationBar.topItem?.title = ""
-        self.loadMovieDetails()
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        if UIDevice.current.orientation.isLandscape {
+            print("Landscpe")
+            containerScrollView.contentSize = UIScreen.main.bounds.size
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//        self.navigationItem.title = "MOVIE_CATALOG".localize()
+    override func viewDidLoad() {
+        
+        title = "MOVIE_DETAILS".localize()
+        navigationController?.navigationBar.topItem?.title = ""
+        loadMovieDetails()
     }
     
     //MARK: - private Methods
@@ -87,8 +91,6 @@ class MovieDetailsViewController : BaseViewController {
     }
     
     @IBAction func watchTrailerTapped(_ sender: UIButton) {
-        print("showing Trailer")
-//        let youTubeVideoPlayer = YouTubePlayerViewController(videoID: videoID ?? "")
         let youTubeVideoPlayer = YouTubePlayerViewController()
         self.navigationController?.show(youTubeVideoPlayer, sender: self)
         youTubeVideoPlayer.playVideo(videoIdentifier: videoID)

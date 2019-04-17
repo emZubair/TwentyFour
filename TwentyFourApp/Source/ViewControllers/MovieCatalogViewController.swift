@@ -17,7 +17,6 @@ class MovieCatalogViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "MOVIE_CATALOG".localize()
         self.loadMoviesCatalog()
     }
     
@@ -29,8 +28,9 @@ class MovieCatalogViewController: BaseViewController {
         catalogTableView.reloadData()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool){
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.topItem?.title = "MOVIE_CATALOG".localize()
     }
     
     fileprivate func loadMoviesCatalog() {

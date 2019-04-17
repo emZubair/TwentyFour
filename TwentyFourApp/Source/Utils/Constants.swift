@@ -9,9 +9,8 @@
 import UIKit
 
 final class TwentyFourConstants {
-    static let movieCellID = "movieCell"
-    static let api_key = "242be8cc853e2f3e7f2a12687b951da8"
     static let apiPopularMovies = "popular"
+    static let youTubeLinkAPI = "%@/videos"
     static let serverURL = "https://api.themoviedb.org/3/movie/%@?api_key=242be8cc853e2f3e7f2a12687b951da8"
     static let posterURL = "https://image.tmdb.org/t/p/w300_and_h450_bestv2/"
     

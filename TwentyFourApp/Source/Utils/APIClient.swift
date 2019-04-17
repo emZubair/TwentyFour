@@ -18,17 +18,17 @@ class APIClient {
     private init(){}
     
     fileprivate func url(for api:String) -> URL? {
-        let fullAPI = String(format: TwentyFourConstants.serverURL, arguments: [api])
+        let apiPath = String(format: TwentyFourConstants.serverURL, api)
         
-        if let apiURL = URL(string: fullAPI) {
+        if let apiURL = URL(string: apiPath) {
+            print("Fetching from URL:\(apiURL.absoluteString)")
             return apiURL
         }
         return nil
     }
     
     func getPopularMovies(page:Int, completion: @escaping (Int,Int,[Movie]?)-> Void) {
-        if let url = url(for: TwentyFourConstants.apiPopularMovies) {
-            print(url)
+        if let url = url(for: (TwentyFourConstants.apiPopularMovies)) {
             Alamofire.request(url).validate().responseJSON { response in
                 guard response.result.isSuccess else {
                     completion(-1,-1, nil)
@@ -52,7 +52,6 @@ class APIClient {
     
     func getDetailsForMovie(with id:String, completion:@escaping (MovieDetails?)->Void){
         if let url = url(for: id) {
-            print(url)
             Alamofire.request(url).validate().responseJSON { response in
                 guard response.result.isSuccess else {
                     completion(nil)
@@ -70,4 +69,25 @@ class APIClient {
         }
     }
     
+    func getYouTubeIDFor(movie:String, completion: @escaping (String?)-> Void) {
+        let youTubeAPI = String(format: TwentyFourConstants.youTubeLinkAPI, movie)
+        if let url = url(for: youTubeAPI) {
+            Alamofire.request(url).validate().responseJSON { response in
+                guard response.result.isSuccess else {
+                    completion(nil)
+                    return
+                }
+                
+                guard let value = response.result.value as? [String: Any],
+                    let result = value["results"] as? [[String: Any]] else {
+                        print("Malformed data received from fetch youtubelink service")
+                        completion(nil)
+                        return
+                }
+                
+                let video_id = result.first?["key"] as? String ?? ""
+                completion(video_id)
+            }
+        }
+    }
 }

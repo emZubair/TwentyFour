@@ -8,11 +8,14 @@
 
 "DATE" = "Date";
 "GENRES" = "Genres";
-"OVERVIEW" = "Overview";
 "SEARCH" = "Search";
-"WATCH_TRAILER" = "Watch Trailer";
+"OVERVIEW" = "Overview";
 "MOVIE_DETAILS" = "Movie Detail";
 "MOVIE_CATALOG" = "Movie Catalog";
 "WATCH_TRAILER" = "Watch Trailer";
+"WATCH_TRAILER" = "Watch Trailer";
 "LOADING_MOVIES" = "Loading Movies!";
 "LOADING_DETAILS" = "Loading Details";
+"SHOWING_MOVIES" = "Showing page %d out of %d pages";
+"FETCH_MOVIE_DETAIL_FAILURE" = "Failed to load movie details";
+"FETCH_MOVIE_FAILURE" = "Failed to load Movies, Try agian later";

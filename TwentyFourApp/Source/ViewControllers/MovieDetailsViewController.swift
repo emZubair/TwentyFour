@@ -7,11 +7,11 @@
 //
 
 import UIKit
-import GradientCircularProgress
 
-class MovieDetailsViewController : UIViewController {
+class MovieDetailsViewController : BaseViewController {
     
     var movieID:Int? = nil
+    var videoID:String? = nil
     
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var genreLbl: UILabel!
@@ -26,12 +26,24 @@ class MovieDetailsViewController : UIViewController {
     
     override func viewDidLoad() {
         self.title = "MOVIE_DETAILS".localize()
-        self.navigationController?.navigationBar.backItem?.title = "MOVIE_CATALOG".localize()
+        self.navigationController?.navigationBar.topItem?.title = ""
         self.loadMovieDetails()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        self.navigationItem.title = "MOVIE_CATALOG".localize()
+    }
+    
     //MARK: - private Methods
+    fileprivate func enableWatchTrailerButton() {
+        print("Trailer available to play")
+        watchTrailerBtn.isEnabled = true
+    }
+    
+    
     fileprivate func setViewData(with movieDetails:MovieDetails) {
+        getYouTubeIDForTrailerVideo()
         movieNameLbl.text = movieDetails.title()
         movieNameLbl.font = UIFont.boldSystemFont(ofSize: 17)
         if let url = URL(string: TwentyFourConstants.posterURL+movieDetails.poster()){
@@ -47,6 +59,7 @@ class MovieDetailsViewController : UIViewController {
         genreValueLbl.text = movieDetails.genre
         overviewTextView.text = movieDetails.overview
         watchTrailerBtn.setTitle("WATCH_TRAILER".localize(), for: .normal)
+        watchTrailerBtn.isEnabled = false
     }
     fileprivate func loadMovieDetails() {
         ProgressLoader.showProgressLoader(with: "LOADING_DETAILS".localize(), bgStyle:.dark)
@@ -55,13 +68,29 @@ class MovieDetailsViewController : UIViewController {
                 if let detail = details {
                     self.setViewData(with: detail)
                 } else {
+                    self.makeBasicToastWith(text: "FETCH_MOVIE_DETAIL_FAILURE".localize())
                 }
                 ProgressLoader.hideProgressLoader()
             }
         }
     }
     
+    fileprivate func getYouTubeIDForTrailerVideo() {
+        if let movie = movieID {
+            APIClient.sharedInstance.getYouTubeIDFor(movie: String(movie)) { identifier in
+                if let id = identifier {
+                    self.videoID = id
+                    self.enableWatchTrailerButton()
+                }
+            }
+        }
+    }
+    
     @IBAction func watchTrailerTapped(_ sender: UIButton) {
         print("showing Trailer")
+//        let youTubeVideoPlayer = YouTubePlayerViewController(videoID: videoID ?? "")
+        let youTubeVideoPlayer = YouTubePlayerViewController()
+        self.navigationController?.show(youTubeVideoPlayer, sender: self)
+        youTubeVideoPlayer.playVideo(videoIdentifier: videoID)
     }
 }

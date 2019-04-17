@@ -1,4 +1,6 @@
+github "0xced/XCDYouTubeKit" "2.7.3"
 github "Alamofire/Alamofire" "4.8.2"
 github "SnapKit/SnapKit" "3.2.0"
 github "keygx/GradientCircularProgress" "swift4.2"
 github "onevcat/Kingfisher" "5.3.1"
+github "scalessec/Toast-Swift" "4.0.1"

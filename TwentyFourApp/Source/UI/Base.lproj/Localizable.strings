@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  TwentyFourApp
+
+  Created by Muhammad Zubair on 4/15/19.
+  Copyright © 2019 Muhammad Zubair. All rights reserved.
+*/
+
+"DATE" = "Date";
+"GENRES" = "Genres";
+"OVERVIEW" = "Overview";
+"SEARCH" = "Search";
+"WATCH_TRAILER" = "Watch Trailer";
+"MOVIE_DETAILS" = "Movie Detail";
+"MOVIE_CATALOG" = "Movie Catalog";
+"WATCH_TRAILER" = "Watch Trailer";
+"LOADING_MOVIES" = "Loading Movies!";
+"LOADING_DETAILS" = "Loading Details";

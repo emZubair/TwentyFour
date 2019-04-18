@@ -11,6 +11,11 @@ import UIKit
 class MovieCatalogViewController: BaseViewController {
     @IBOutlet var catalogTableView: UITableView!
     
+    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var nextBtn: UIBarButtonItem!
+    @IBOutlet weak var previousBtn: UIBarButtonItem!
+    
     var movies:[Movie]?
     var currentPage = 1
     var totalPages:Int? = nil
@@ -33,6 +38,10 @@ class MovieCatalogViewController: BaseViewController {
         self.navigationController?.navigationBar.topItem?.title = "MOVIE_CATALOG".localize()
     }
     
+    @IBAction func nextButtonTapped(_ sender: Any) {
+    }
+    @IBAction func previousButtonTapped(_ sender: Any) {
+    }
     fileprivate func loadMoviesCatalog() {
         makeActivityToastAtCenter()
         APIClient.sharedInstance.getPopularMovies(page: 1) { page,totalPages, fetchedMovies in

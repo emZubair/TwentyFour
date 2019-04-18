@@ -14,6 +14,9 @@
 		3D5A6C3F2267105F00991A93 /* ToastSwiftFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5A6C3D2267105E00991A93 /* ToastSwiftFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D5A6C412267107500991A93 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5A6C402267107500991A93 /* BaseViewController.swift */; };
 		3D5A6C452267382700991A93 /* YouTubePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5A6C442267382600991A93 /* YouTubePlayerViewController.swift */; };
+		3D6FA0A722684EA9009FB696 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A422684EA9009FB696 /* Constants.swift */; };
+		3D6FA0A822684EA9009FB696 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A522684EA9009FB696 /* APIClient.swift */; };
+		3D6FA0A922684EA9009FB696 /* ProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */; };
 		3DB819612264CFB100CA9C50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB819602264CFB100CA9C50 /* Assets.xcassets */; };
 		3DB8196F2264CFB100CA9C50 /* TwentyFourAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB8196E2264CFB100CA9C50 /* TwentyFourAppTests.swift */; };
 		3DB8198B2264D3F000CA9C50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DB819812264D3F000CA9C50 /* LaunchScreen.storyboard */; };
@@ -21,10 +24,7 @@
 		3DB8198E2264D3F000CA9C50 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB819892264D3F000CA9C50 /* AppDelegate.swift */; };
 		3DB819912264D4D800CA9C50 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DB8198F2264D4D800CA9C50 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DB819952264D4DF00CA9C50 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DB819932264D4DF00CA9C50 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3DB819972264D55600CA9C50 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB819962264D55600CA9C50 /* APIClient.swift */; };
-		3DB819992264D5EA00CA9C50 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB819982264D5EA00CA9C50 /* Constants.swift */; };
 		3DB8199C2264DD6900CA9C50 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB8199A2264DD6900CA9C50 /* Localizable.strings */; };
-		3DB8199E2264E2DB00CA9C50 /* ProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB8199D2264E2DB00CA9C50 /* ProgressLoader.swift */; };
 		3DB819A02264E31B00CA9C50 /* GradientCircularProgress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DB8199F2264E31A00CA9C50 /* GradientCircularProgress.framework */; };
 		3DB819A12264E31B00CA9C50 /* GradientCircularProgress.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DB8199F2264E31A00CA9C50 /* GradientCircularProgress.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DB819A32264E8F600CA9C50 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB819A22264E8F600CA9C50 /* MovieDetail.swift */; };
@@ -69,6 +69,9 @@
 		3D5A6C3D2267105E00991A93 /* ToastSwiftFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ToastSwiftFramework.framework; path = Carthage/Build/iOS/ToastSwiftFramework.framework; sourceTree = "<group>"; };
 		3D5A6C402267107500991A93 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		3D5A6C442267382600991A93 /* YouTubePlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlayerViewController.swift; sourceTree = "<group>"; };
+		3D6FA0A422684EA9009FB696 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3D6FA0A522684EA9009FB696 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressLoader.swift; sourceTree = "<group>"; };
 		3DB819562264CFAE00CA9C50 /* TwentyFourApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwentyFourApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DB819602264CFB100CA9C50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DB819652264CFB100CA9C50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -82,10 +85,7 @@
 		3DB819892264D3F000CA9C50 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3DB8198F2264D4D800CA9C50 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		3DB819932264D4DF00CA9C50 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
-		3DB819962264D55600CA9C50 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
-		3DB819982264D5EA00CA9C50 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3DB8199B2264DD6900CA9C50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Source/UI/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3DB8199D2264E2DB00CA9C50 /* ProgressLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoader.swift; sourceTree = "<group>"; };
 		3DB8199F2264E31A00CA9C50 /* GradientCircularProgress.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GradientCircularProgress.framework; path = Carthage/Build/iOS/GradientCircularProgress.framework; sourceTree = "<group>"; };
 		3DB819A22264E8F600CA9C50 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		3DB819A52264EA2200CA9C50 /* MovieCatalogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCatalogViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +115,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D6FA0A322684EA9009FB696 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				3D6FA0A422684EA9009FB696 /* Constants.swift */,
+				3D6FA0A522684EA9009FB696 /* APIClient.swift */,
+				3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		3DB8194D2264CFAE00CA9C50 = {
 			isa = PBXGroup;
 			children = (
@@ -172,8 +182,8 @@
 		3DB8197F2264D3F000CA9C50 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3D6FA0A322684EA9009FB696 /* Utility */,
 				3DB819802264D3F000CA9C50 /* UI */,
-				3DB819862264D3F000CA9C50 /* Utils */,
 				3DB819872264D3F000CA9C50 /* Models */,
 				3DB819882264D3F000CA9C50 /* ViewControllers */,
 				3DB819892264D3F000CA9C50 /* AppDelegate.swift */,
@@ -189,16 +199,6 @@
 				3DB819832264D3F000CA9C50 /* Main.storyboard */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		3DB819862264D3F000CA9C50 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				3DB819962264D55600CA9C50 /* APIClient.swift */,
-				3DB819982264D5EA00CA9C50 /* Constants.swift */,
-				3DB8199D2264E2DB00CA9C50 /* ProgressLoader.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		3DB819872264D3F000CA9C50 /* Models */ = {
@@ -353,15 +353,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D5A6C382266DDE500991A93 /* MovieDetailsViewController.swift in Sources */,
+				3D6FA0A922684EA9009FB696 /* ProgressLoader.swift in Sources */,
 				3DB8198E2264D3F000CA9C50 /* AppDelegate.swift in Sources */,
-				3DB8199E2264E2DB00CA9C50 /* ProgressLoader.swift in Sources */,
 				3DB819A32264E8F600CA9C50 /* MovieDetail.swift in Sources */,
-				3DB819972264D55600CA9C50 /* APIClient.swift in Sources */,
 				3D5A6C412267107500991A93 /* BaseViewController.swift in Sources */,
 				3DB819A82264ED5F00CA9C50 /* MovieCatalogCell.swift in Sources */,
 				3DB819A62264EA2200CA9C50 /* MovieCatalogViewController.swift in Sources */,
-				3DB819992264D5EA00CA9C50 /* Constants.swift in Sources */,
 				3D5A6C452267382700991A93 /* YouTubePlayerViewController.swift in Sources */,
+				3D6FA0A722684EA9009FB696 /* Constants.swift in Sources */,
+				3D6FA0A822684EA9009FB696 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,9 +18,12 @@ class MovieCatalogViewController: BaseViewController {
     @IBOutlet weak var nextBtn: UIBarButtonItem!
     @IBOutlet weak var previousBtn: UIBarButtonItem!
     fileprivate var refreshControl:UIRefreshControl!
+    
+    var totalPages = 1
     var movies:[Movie]?
     var currentPage = 1
-    var totalPages = 1
+    var year:String? = nil
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +42,7 @@ class MovieCatalogViewController: BaseViewController {
         refreshControl.addTarget(self, action: #selector(MovieCatalogViewController.refresh(sender:)), for: UIControl.Event.valueChanged)
         catalogTableView.addSubview(refreshControl)
         searchBar.placeholder = "NAME_TO_SEARCH".localize()
+        searchBar.inputAccessoryView = keyboardAccessoryView()
         nextBtn.title = "NEXT".localize()
         previousBtn.title = "BACK".localize()
         self.loadMoviesCatalog()
@@ -72,6 +76,10 @@ class MovieCatalogViewController: BaseViewController {
         self.navigationController?.navigationBar.topItem?.title = text
     }
     
+    fileprivate func showingPopularMovies() -> Bool {
+        return navigationController?.navigationBar.topItem?.title == "MOVIE_CATALOG".localize() ? true : false
+    }
+    
     fileprivate func updateButtonsAndBar() {
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -97,6 +105,15 @@ class MovieCatalogViewController: BaseViewController {
         }
     }
     
+    fileprivate func loadMovies(by year:String, page number:Int) {
+        let message = String(format: "LOADING_YEAR".localize(), year)
+        ProgressLoader.showProgressLoader(with: message)
+        APIClient.sharedInstance.searchMovie(by: year, page: number) { page,totalPages, fetchedMovies in
+            let view_title = String(format: "RELEASED_IN_YEAR".localize(), year)
+            self.updateViewDataWith(movies: fetchedMovies, page: page, totalPages: totalPages, title: view_title)
+        }
+    }
+    
     fileprivate func updateViewDataWith(movies:[Movie]?, page:Int, totalPages:Int, title:String) {
         ProgressLoader.hideProgressLoader()
         refreshControl.endRefreshing()
@@ -107,27 +124,21 @@ class MovieCatalogViewController: BaseViewController {
                 self.movies = movies
                 self.reloadTableView()
                 self.updateTitle(with: title)
+                if !showingPopularMovies() {
+                    year = title.components(separatedBy: " ").last
+                }
                 self.updateButtonsAndBar()
             }else {
-                searchBar.becomeFirstResponder()
-                self.showInvalidYearToast()
+                self.showFailureToast(with: "NO_TITLES_FOUND")
             }
         } else {
-            self.showFailureToast()
+            self.showFailureToast(with: "FETCH_MOVIE_FAILURE")
         }
         
     }
     
-    fileprivate func show(movies:[Movie]?, page:Int, totalPages:Int) {
-        
-    }
-    
-    fileprivate func showFailureToast() {
-        self.makeBasicToastWithForTableViews(text: "FETCH_MOVIE_FAILURE".localize())
-    }
-    
-    fileprivate func showInvalidYearToast() {
-        self.makeBasicToastWith(text: "INVALID_YEAR".localize(), position: .top, duration: 2)
+    fileprivate func showFailureToast(with message:String) {
+        makeBasicToastWithForTableViews(text: message.localize())
     }
     
     fileprivate func showDetailsForMovieSelected(at index:Int) {
@@ -141,16 +152,45 @@ class MovieCatalogViewController: BaseViewController {
         }
     }
     
+    fileprivate func loadPageInSelectedCategory() {
+        showingPopularMovies() ? loadMoviesCatalog() : loadMovies(by: year!, page: currentPage)
+    }
+    
     @IBAction func nextButtonTapped(_ sender: Any) {
         if NetworkStatusUtility.shared.shouldProceed(from: self) {
             currentPage += 1
-            loadMoviesCatalog()
+            loadPageInSelectedCategory()
         }
     }
     @IBAction func previousButtonTapped(_ sender: Any) {
         if NetworkStatusUtility.shared.shouldProceed(from: self) {
             currentPage -= 1
-            loadMoviesCatalog()
+            loadPageInSelectedCategory()
+        }
+    }
+    
+    func keyboardAccessoryView() -> UIToolbar {
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.sizeToFit()
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "DONE".localize(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(MovieCatalogViewController.doneTapped))
+        toolBar.setItems([spaceButton,doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        toolbar.sizeToFit()
+        return toolBar
+    }
+    
+    @objc func doneTapped() {
+        if let year = searchBar.text, year.count == 4 {
+            if NetworkStatusUtility.shared.shouldProceed(from: self) {
+                loadMovies(by: year, page: 1)
+                searchBar.resignFirstResponder()
+                searchBar.text = ""
+            }
+        }else {
+            makeBasicToastWith(text: "YEAR_VALUE_ERROR".localize(), position: .top, duration: 1)
         }
     }
     
@@ -175,7 +215,6 @@ extension MovieCatalogViewController : UITableViewDataSource {
 
 //MARK: - TableViewDelegate Methods
 extension MovieCatalogViewController : UITableViewDelegate{
-    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         searchBar.resignFirstResponder()
     }
@@ -192,17 +231,6 @@ extension MovieCatalogViewController : UITableViewDelegate{
 
 extension MovieCatalogViewController : UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let text = searchBar.text, text.count == 4 {
-            if NetworkStatusUtility.shared.shouldProceed(from: self) {
-                currentPage = 1
-                ProgressLoader.showProgressLoader(with: "LOADING_MOVIES".localize())
-                APIClient.sharedInstance.searchMovieBy(year: text, page: currentPage) { page,totalPages, fetchedMovies in
-                    let view_title = String(format: "RELEASED_IN_YEAR".localize(), text)
-                    self.updateViewDataWith(movies: fetchedMovies, page: page, totalPages: totalPages, title: view_title)
-                }
-            }
-        }else {
-            makeBasicToastWith(text: "YEAR_VALUE_ERROR".localize(), position: .top, duration: 1)
-        }
+        doneTapped()
     }
 }

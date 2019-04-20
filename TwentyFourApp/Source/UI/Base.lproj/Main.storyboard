@@ -72,7 +72,7 @@
                                         <searchBar key="customView" contentMode="redraw" id="pOr-ym-o9o">
                                             <rect key="frame" x="61" y="0.0" width="224" height="56"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" enablesReturnKeyAutomatically="YES" textContentType="postal-code"/>
                                             <connections>
                                                 <outlet property="delegate" destination="jIS-wu-yAb" id="lOt-9w-c2m"/>
                                             </connections>

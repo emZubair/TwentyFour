@@ -32,17 +32,13 @@ fileprivate struct ProgressLoaderStyle : StyleProperty {
     public var messageLabelFontColor: UIColor? = UIColor.black
     
     // Background
-    public var backgroundStyle: BackgroundStyles = .transparent
+    public var backgroundStyle: BackgroundStyles = .dark
     
     // Dismiss
     public var dismissTimeInterval: Double? = 0.0 // 'nil' for default setting.
     
     
     public init() {}
-    
-    public init(backgroundStyle:BackgroundStyles = .transparent) {
-        self.backgroundStyle = backgroundStyle
-    }
 }
 
 final class ProgressLoader {
@@ -53,8 +49,12 @@ final class ProgressLoader {
      - parameters:
      - text: optional text to display
      */
-    static func showProgressLoader(with text:String, bgStyle:BackgroundStyles = .transparent) {
-        progressIndicator.show(message: text, style: ProgressLoaderStyle(backgroundStyle: bgStyle))
+    static func showProgressLoader(with text:String) {
+        progressIndicator.show(message: text, style: ProgressLoaderStyle())
+    }
+    
+    static func isShowing() -> Bool {
+        return progressIndicator.isAvailable
     }
     
     static func showProgressLoader() {

@@ -5,7 +5,8 @@
   Created by Muhammad Zubair on 4/15/19.
   Copyright © 2019 Muhammad Zubair. All rights reserved.
 */
-
+"NEXT" = "Next";
+"BACK" = "Back";
 "DATE" = "Date";
 "GENRES" = "Genres";
 "SEARCH" = "Search";
@@ -14,8 +15,14 @@
 "MOVIE_CATALOG" = "Movie Catalog";
 "WATCH_TRAILER" = "Watch Trailer";
 "WATCH_TRAILER" = "Watch Trailer";
+"NAME_TO_SEARCH" = "enter year to search";
 "LOADING_MOVIES" = "Loading Movies!";
 "LOADING_DETAILS" = "Loading Details";
+"PULL_TO_REFRESH" = "Pull to load Popular Movies!";
+"YEAR_VALUE_ERROR" = "Year must be 4 digits long!";
+"RELEASED_IN_YEAR" = "Release in %@";
 "SHOWING_MOVIES" = "Showing page %d out of %d pages";
+"INVALID_YEAR" = "No titles found in your entered Year";
 "FETCH_MOVIE_DETAIL_FAILURE" = "Failed to load movie details";
 "FETCH_MOVIE_FAILURE" = "Failed to load Movies, Try agian later";
+"NETWORK_CONNECTION_ERROR" = "You are not connected to Internet, Connect to Internet & Try again";

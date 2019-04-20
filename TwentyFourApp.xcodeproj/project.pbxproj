@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D2CE25C2268D38B005B3F0C /* NetworkStatusUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE25B2268D38B005B3F0C /* NetworkStatusUtility.swift */; };
 		3D5A6C382266DDE500991A93 /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5A6C372266DDE500991A93 /* MovieDetailsViewController.swift */; };
 		3D5A6C3B2267105300991A93 /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5A6C3A2267105200991A93 /* XCDYouTubeKit.framework */; };
 		3D5A6C3C2267105300991A93 /* XCDYouTubeKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5A6C3A2267105200991A93 /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -64,6 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3D2CE25B2268D38B005B3F0C /* NetworkStatusUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStatusUtility.swift; sourceTree = "<group>"; };
 		3D5A6C372266DDE500991A93 /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
 		3D5A6C3A2267105200991A93 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 		3D5A6C3D2267105E00991A93 /* ToastSwiftFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ToastSwiftFramework.framework; path = Carthage/Build/iOS/ToastSwiftFramework.framework; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				3D6FA0A422684EA9009FB696 /* Constants.swift */,
 				3D6FA0A522684EA9009FB696 /* APIClient.swift */,
 				3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */,
+				3D2CE25B2268D38B005B3F0C /* NetworkStatusUtility.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				3D5A6C452267382700991A93 /* YouTubePlayerViewController.swift in Sources */,
 				3D6FA0A722684EA9009FB696 /* Constants.swift in Sources */,
 				3D6FA0A822684EA9009FB696 /* APIClient.swift in Sources */,
+				3D2CE25C2268D38B005B3F0C /* NetworkStatusUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

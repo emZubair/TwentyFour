@@ -33,7 +33,6 @@ class MovieDetailsViewController : BaseViewController {
     }
     
     override func viewDidLoad() {
-        
         title = "MOVIE_DETAILS".localize()
         navigationController?.navigationBar.topItem?.title = ""
         loadMovieDetails()
@@ -66,7 +65,7 @@ class MovieDetailsViewController : BaseViewController {
         watchTrailerBtn.isEnabled = false
     }
     fileprivate func loadMovieDetails() {
-        ProgressLoader.showProgressLoader(with: "LOADING_DETAILS".localize(), bgStyle:.dark)
+        ProgressLoader.showProgressLoader(with: "LOADING_DETAILS".localize())
         if let id = movieID {
             APIClient.sharedInstance.getDetailsForMovie(with: String(id)) { details in
                 if let detail = details {
@@ -91,8 +90,10 @@ class MovieDetailsViewController : BaseViewController {
     }
     
     @IBAction func watchTrailerTapped(_ sender: UIButton) {
-        let youTubeVideoPlayer = YouTubePlayerViewController()
-        self.navigationController?.show(youTubeVideoPlayer, sender: self)
-        youTubeVideoPlayer.playVideo(videoIdentifier: videoID)
+        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+            let youTubeVideoPlayer = YouTubePlayerViewController()
+            self.navigationController?.show(youTubeVideoPlayer, sender: self)
+            youTubeVideoPlayer.playVideo(videoIdentifier: videoID)
+        }
     }
 }

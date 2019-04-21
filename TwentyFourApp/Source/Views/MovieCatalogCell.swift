@@ -14,9 +14,10 @@ class MovieCatalogCell : UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var posterImageView: UIImageView!
-    
+        
     func updateCellUI(with details:Movie) {
         titleLabel.text = details.title
+        titleLabel.font = UIFont.systemFont(ofSize: self.bounds.height * 0.25)
         if let url = URL(string: TwentyFourConstants.posterURL+details.poster){
             posterImageView.kf.setImage(with: url)
         }

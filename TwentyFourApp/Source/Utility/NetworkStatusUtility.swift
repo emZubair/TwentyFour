@@ -9,17 +9,12 @@ import UIKit
 import Alamofire
 
 class NetworkStatusUtility {
-    let reachabilityManager:NetworkReachabilityManager?
     
-    //shared instance
-    static let shared = NetworkStatusUtility()
-    
-    private init() {
-        reachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.google.com")
+    init() {
     }
     
     func isConnected() -> Bool {
-        return reachabilityManager?.isReachable ?? true
+        return Alamofire.NetworkReachabilityManager()?.isReachable ?? false
     }
     
     func shouldProceed(from:BaseViewController) -> BooleanLiteralType{
@@ -33,21 +28,19 @@ class NetworkStatusUtility {
     
     func startNetworkReachabilityObserver() {
         
-        reachabilityManager?.listener = { status in
+        Alamofire.NetworkReachabilityManager()?.listener = { status in
             switch status {
             case .notReachable, .unknown:
                 print("The network is not reachable")
             case .reachable(.ethernetOrWiFi), .reachable(.wwan):
+                NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "NetworkReachAbilityChanged")))
                 print("Connected to Network")
             }
-            NotificationCenter.default.post(Notification.init(name: Notification.Name(rawValue: "NetworkReachAbilityChanged")))
+            
         }
         
         // start listening
-        if let manager = reachabilityManager {
-            print("Starting Reachability Listener")
-            manager.startListening()
-        }
+        Alamofire.NetworkReachabilityManager()?.startListening()
     }
 }
 

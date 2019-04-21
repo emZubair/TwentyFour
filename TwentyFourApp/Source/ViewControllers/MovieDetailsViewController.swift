@@ -24,14 +24,6 @@ class MovieDetailsViewController : BaseViewController {
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var overviewTextView: UITextView!
     
-    
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        if UIDevice.current.orientation.isLandscape {
-            print("Landscpe")
-            containerScrollView.contentSize = UIScreen.main.bounds.size
-        }
-    }
-    
     override func viewDidLoad() {
         title = "MOVIE_DETAILS".localize()
         navigationController?.navigationBar.topItem?.title = ""
@@ -44,26 +36,41 @@ class MovieDetailsViewController : BaseViewController {
         watchTrailerBtn.isEnabled = true
     }
     
+    /// Updates the Label font sizes as per Screen size
+    fileprivate func updateFontSizeRelativeToScreen() {
+        let screenHeight = UIScreen.main.bounds.height
+        let boldFontSize = screenHeight * 0.025
+        let simpleFontSize = screenHeight * 0.020
+        
+        dateLbl.font = UIFont.boldSystemFont(ofSize: boldFontSize)
+        genreLbl.font = UIFont.boldSystemFont(ofSize: boldFontSize)
+        overviewLbl.font = UIFont.boldSystemFont(ofSize: boldFontSize)
+        movieNameLbl.font = UIFont.boldSystemFont(ofSize: boldFontSize)
+        
+        dateValueLbl.font = UIFont.systemFont(ofSize: simpleFontSize)
+        genreValueLbl.font = UIFont.systemFont(ofSize: simpleFontSize)
+        overviewTextView.font = UIFont.systemFont(ofSize: simpleFontSize)
+        watchTrailerBtn.titleLabel?.font = UIFont.systemFont(ofSize: simpleFontSize)
+    }
     
     fileprivate func setViewData(with movieDetails:MovieDetails) {
         getYouTubeIDForTrailerVideo()
+        updateFontSizeRelativeToScreen()
         movieNameLbl.text = movieDetails.title()
-        movieNameLbl.font = UIFont.boldSystemFont(ofSize: 17)
         if let url = URL(string: TwentyFourConstants.posterURL+movieDetails.poster()){
             posterImageView.kf.setImage(with: url)
         }
         dateLbl.text = "DATE".localize()
-        dateLbl.font = UIFont.boldSystemFont(ofSize: 17)
         genreLbl.text = "GENRES".localize()
-        genreLbl.font = UIFont.boldSystemFont(ofSize: 17)
         overviewLbl.text = "OVERVIEW".localize()
-        overviewLbl.font = UIFont.boldSystemFont(ofSize: 17)
         dateValueLbl.text = movieDetails.date
         genreValueLbl.text = movieDetails.genre
         overviewTextView.text = movieDetails.overview
         watchTrailerBtn.setTitle("WATCH_TRAILER".localize(), for: .normal)
         watchTrailerBtn.isEnabled = false
     }
+    
+    /// Loads the Details for the selected Movie
     fileprivate func loadMovieDetails() {
         ProgressLoader.showProgressLoader(with: "LOADING_DETAILS".localize())
         if let id = movieID {
@@ -78,6 +85,7 @@ class MovieDetailsViewController : BaseViewController {
         }
     }
     
+    /// Loads YouTube Identifier for the selected movie
     fileprivate func getYouTubeIDForTrailerVideo() {
         if let movie = movieID {
             APIClient.sharedInstance.getYouTubeIDFor(movie: String(movie)) { identifier in
@@ -90,7 +98,7 @@ class MovieDetailsViewController : BaseViewController {
     }
     
     @IBAction func watchTrailerTapped(_ sender: UIButton) {
-        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+        if NetworkStatusUtility().shouldProceed(from: self) {
             let youTubeVideoPlayer = YouTubePlayerViewController()
             self.navigationController?.show(youTubeVideoPlayer, sender: self)
             youTubeVideoPlayer.playVideo(videoIdentifier: videoID)

@@ -10,11 +10,10 @@ import UIKit
 
 class MovieCatalogViewController: BaseViewController {
     
-    @IBOutlet var catalogTableView: UITableView!
-    
-    @IBOutlet weak var searchbar: UISearchBar!
     @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var searchbar: UISearchBar!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet var catalogTableView: UITableView!
     @IBOutlet weak var nextBtn: UIBarButtonItem!
     @IBOutlet weak var previousBtn: UIBarButtonItem!
     fileprivate var refreshControl:UIRefreshControl!
@@ -23,10 +22,13 @@ class MovieCatalogViewController: BaseViewController {
     var movies:[Movie]?
     var currentPage = 1
     var year:String? = nil
-    
+    var cellHeight:CGFloat!
+    var networkStatus:NetworkStatusUtility!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        networkStatus = NetworkStatusUtility()
+        networkStatus.startNetworkReachabilityObserver()
         currentPage = 1
         totalPages = 1
         searchBar.translatesAutoresizingMaskIntoConstraints = true
@@ -36,23 +38,39 @@ class MovieCatalogViewController: BaseViewController {
         viewSetUp()
     }
     
+    func adjustSize() {
+        let bounds = UIScreen.main.bounds
+        cellHeight = bounds.height
+        cellHeight *= bounds.height > bounds.width ?  0.13 : 0.25
+        let fontSize = bounds.height * 0.025
+        refreshControl.attributedTitle = NSAttributedString(string: "PULL_TO_REFRESH".localize(), attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)])
+
+    }
+    
     fileprivate func viewSetUp() {
         refreshControl = UIRefreshControl(frame: catalogTableView.bounds)
-        refreshControl.attributedTitle = NSAttributedString(string: "PULL_TO_REFRESH".localize())
         refreshControl.addTarget(self, action: #selector(MovieCatalogViewController.refresh(sender:)), for: UIControl.Event.valueChanged)
         catalogTableView.addSubview(refreshControl)
+        adjustSize()
         searchBar.placeholder = "NAME_TO_SEARCH".localize()
         searchBar.inputAccessoryView = keyboardAccessoryView()
         nextBtn.title = "NEXT".localize()
         previousBtn.title = "BACK".localize()
-        self.loadMoviesCatalog()
-        NotificationCenter.default.addObserver(self, selector: #selector(MovieCatalogViewController.networkStatusChanged), name: Notification.Name(rawValue: "NetworkReachAbilityChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MovieCatalogViewController.checkInternetAndLoadContent), name: Notification.Name(rawValue: "NetworkReachAbilityChanged"), object: nil)
+        checkInternetAndLoadContent()
     }
     
+    fileprivate func stopResfreshin() {
+        refreshControl.endRefreshing()
+    }
+    
+    /// Refersh content via Pull & refresh
     @objc func refresh(sender:AnyObject) {
-        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+        if networkStatus.shouldProceed(from: self) {
             currentPage = 1
             loadMoviesCatalog()
+        }else {
+            stopResfreshin()
         }
     }
     
@@ -60,8 +78,8 @@ class MovieCatalogViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func networkStatusChanged() {
-        if NetworkStatusUtility.shared.isConnected() {
+    @objc func checkInternetAndLoadContent() {
+        if networkStatus.isConnected() {
             loadMoviesCatalog()
         }
     }
@@ -80,6 +98,7 @@ class MovieCatalogViewController: BaseViewController {
         return navigationController?.navigationBar.topItem?.title == "MOVIE_CATALOG".localize() ? true : false
     }
     
+    /// Enable/Disable buttons depending upn the page number
     fileprivate func updateButtonsAndBar() {
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -94,6 +113,7 @@ class MovieCatalogViewController: BaseViewController {
         ProgressLoader.hideProgressLoader()
     }
     
+    /// Loads Popular movies
     fileprivate func loadMoviesCatalog() {
         if ProgressLoader.isShowing() {
             return
@@ -105,6 +125,8 @@ class MovieCatalogViewController: BaseViewController {
         }
     }
     
+    
+     /// Loads movies by year
     fileprivate func loadMovies(by year:String, page number:Int) {
         let message = String(format: "LOADING_YEAR".localize(), year)
         ProgressLoader.showProgressLoader(with: message)
@@ -114,9 +136,11 @@ class MovieCatalogViewController: BaseViewController {
         }
     }
     
+    
+    /// Populates tableView with fetched data
     fileprivate func updateViewDataWith(movies:[Movie]?, page:Int, totalPages:Int, title:String) {
         ProgressLoader.hideProgressLoader()
-        refreshControl.endRefreshing()
+        stopResfreshin()
         if let movies = movies{
             if movies.count > 1 {
                 self.currentPage = page
@@ -142,7 +166,7 @@ class MovieCatalogViewController: BaseViewController {
     }
     
     fileprivate func showDetailsForMovieSelected(at index:Int) {
-        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+        if networkStatus.shouldProceed(from: self) {
             if let selectedMovie = movies?[index] {
                 let movieID = selectedMovie.id
                 let detailViewController = ViewControllerLoader.loadViewController(of: MovieDetailsViewController.self, with: .MovieDetailsViewController)
@@ -152,23 +176,28 @@ class MovieCatalogViewController: BaseViewController {
         }
     }
     
+    /**
+     Loads the next page from movies list
+     Before fetching check which API to fetch from
+    */
     fileprivate func loadPageInSelectedCategory() {
         showingPopularMovies() ? loadMoviesCatalog() : loadMovies(by: year!, page: currentPage)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
-        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+        if networkStatus.shouldProceed(from: self) {
             currentPage += 1
             loadPageInSelectedCategory()
         }
     }
     @IBAction func previousButtonTapped(_ sender: Any) {
-        if NetworkStatusUtility.shared.shouldProceed(from: self) {
+        if networkStatus.shouldProceed(from: self) {
             currentPage -= 1
             loadPageInSelectedCategory()
         }
     }
     
+    /// Provides Toolbar with Done Button, appened with Keyboard
     func keyboardAccessoryView() -> UIToolbar {
         let toolBar = UIToolbar()
         toolBar.barStyle = UIBarStyle.default
@@ -184,7 +213,7 @@ class MovieCatalogViewController: BaseViewController {
     
     @objc func doneTapped() {
         if let year = searchBar.text, year.count == 4 {
-            if NetworkStatusUtility.shared.shouldProceed(from: self) {
+            if networkStatus.shouldProceed(from: self) {
                 loadMovies(by: year, page: 1)
                 searchBar.resignFirstResponder()
                 searchBar.text = ""
@@ -210,7 +239,6 @@ extension MovieCatalogViewController : UITableViewDataSource {
         }
         return cell
     }
-    
 }
 
 //MARK: - TableViewDelegate Methods
@@ -221,7 +249,7 @@ extension MovieCatalogViewController : UITableViewDelegate{
     
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return cellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -229,6 +257,7 @@ extension MovieCatalogViewController : UITableViewDelegate{
     }
 }
 
+//MARK: - UISearchBar delegate Methods
 extension MovieCatalogViewController : UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         doneTapped()

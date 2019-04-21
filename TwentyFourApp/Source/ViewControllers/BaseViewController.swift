@@ -25,19 +25,33 @@ class BaseViewController : UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(BaseViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    /**
+     Shows a Toast message with given duration & position
+     - parameters:
+        - text: message to be shown as toast
+        - position: options are bottom, center & top
+        - duration: for how long toast should be visible
+    */
     func makeBasicToastWith(text:String, position:ToastPosition = .bottom, duration:Double = 3) {
         view.makeToast(text, duration: duration, position:.bottom)
     }
     
+    /**
+     Shows a Toast message in tableviews with given duration at bottom
+     - parameters:
+        - text: message to be shown as toast
+        - duration: for how long toast should be visible
+     */
     func makeBasicToastWithForTableViews(text:String, duration:Double = 3) {
         view.window?.makeToast(text, duration: duration, position: .bottom)
     }
     
-    
+    /// show Loading Activity at the center
     func makeActivityToastAtCenter() {
         view.makeToastActivity(centerPoint)
     }
     
+    /// hides the Loading Activity
     func hideToastActivity(){
         view.hideToastActivity()
     }

@@ -29,7 +29,7 @@ fileprivate struct ProgressLoaderStyle : StyleProperty {
     
     // Message
     public var messageLabelFont: UIFont? = UIFont.systemFont(ofSize: 16.0)
-    public var messageLabelFontColor: UIColor? = UIColor.black
+    public var messageLabelFontColor: UIColor? = UIColor.white
     
     // Background
     public var backgroundStyle: BackgroundStyles = .dark
@@ -47,20 +47,23 @@ final class ProgressLoader {
     /**
      Show Progress Loader
      - parameters:
-     - text: optional text to display
+        - text: optional text to display
      */
     static func showProgressLoader(with text:String) {
         progressIndicator.show(message: text, style: ProgressLoaderStyle())
     }
     
+    /// Already showing a loader or not
     static func isShowing() -> Bool {
         return progressIndicator.isAvailable
     }
     
+    /// Shows Progress Loader without a text
     static func showProgressLoader() {
         progressIndicator.show(style: ProgressLoaderStyle())
     }
     
+    /// Hides progress Loader
     static func hideProgressLoader() {
         progressIndicator.dismiss()
     }

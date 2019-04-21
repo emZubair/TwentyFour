@@ -17,6 +17,11 @@ final class APIClient {
     //MARK: - Private Methods
     private init(){}
     
+    /**
+     make a request for a given API path string
+     - parameters:
+        - api: path for the API to target
+     */
     fileprivate func makeRequest(for api:String) -> URLRequest? {
         let apiPath = String(format: TwentyFourConstants.basePath, api)
         if let apiURL = URL(string: apiPath) {
@@ -28,6 +33,7 @@ final class APIClient {
         return nil
     }
     
+    /// Parses API response data and calls completion closures
     fileprivate func parseAPI(_ response:DataResponse<Any>, completion: @escaping(Int,Int,[Movie]?) -> Void) {
         guard response.result.isSuccess else {
             completion(-1,-1, nil)
@@ -47,6 +53,7 @@ final class APIClient {
         completion(page,total_pages,movies)
     }
     
+    /// Fetches list of Popular movies with specified page number
     func getPopularMovies(page:Int, completion: @escaping (Int,Int,[Movie]?)-> Void) {
         let popular_api_path = String(format: TwentyFourConstants.popularPath, page)
         if let request = makeRequest(for: popular_api_path) {
@@ -56,7 +63,7 @@ final class APIClient {
         }
     }
     
-    
+    /// Fetches list of movies in specified release year & page number
     func searchMovie(by year:String, page:Int = 1, completion: @escaping (Int,Int,[Movie]?)-> Void) {
         let discover_api_path = String(format: TwentyFourConstants.discover_path, arguments: [year ,String(page)])
         if let request = makeRequest(for: discover_api_path) {
@@ -66,6 +73,7 @@ final class APIClient {
         }
     }
     
+    /// Fetches details for the provided movie ID
     func getDetailsForMovie(with id:String, completion:@escaping (MovieDetails?)->Void){
         let detail_api_path = String(format: TwentyFourConstants.movie_detail, id)
         if let request = makeRequest(for: detail_api_path) {
@@ -86,6 +94,7 @@ final class APIClient {
         }
     }
     
+    /// Fetches YouTube Identifier for the provided movie ID
     func getYouTubeIDFor(movie:String, completion: @escaping (String?)-> Void) {
         let youtube_id_api_path = String(format: TwentyFourConstants.youTubeLinkAPI, movie)
         if let request = makeRequest(for: youtube_id_api_path) {

@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "4516943d-c4a7-43af-93af-2d20e4fbf9aa",
+		"name": "TwentyFour",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PopularMovies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}movie/popular?api_key={{api_key}}&page=1",
+					"host": [
+						"{{url}}movie"
+					],
+					"path": [
+						"popular"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MovieDetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}movie/640?api_key={{api_key}}",
+					"host": [
+						"{{url}}movie"
+					],
+					"path": [
+						"640"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search by year",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}discover/movie?api_key={{api_key}}&primary_release_year=2016&sort_by=vote_average.desc&page=1",
+					"host": [
+						"{{url}}discover"
+					],
+					"path": [
+						"movie"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						},
+						{
+							"key": "primary_release_year",
+							"value": "2016"
+						},
+						{
+							"key": "sort_by",
+							"value": "vote_average.desc"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "youTubeLink",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}movie/640/videos?api_key={{api_key}}",
+					"host": [
+						"{{url}}movie"
+					],
+					"path": [
+						"640",
+						"videos"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

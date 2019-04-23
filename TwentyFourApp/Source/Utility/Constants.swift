@@ -9,13 +9,13 @@
 import UIKit
 
 final class TwentyFourConstants {
-    static let page_param = "&page=%d"
-    static let movie_detail = "movie/%@?"
-    static let youTubeLinkAPI = "movie/%@/videos?"
-    static let popularPath = "movie/popular?page=%d"
+    static let movieDetailAPI = "movie/%@"
+    static let popularAPI = "movie/popular"
+    static let discoverAPI = "discover/movie"
+    static let youTubeLinkAPI = "movie/%@/videos"
+    static let basePath = "https://api.themoviedb.org/3/"
+    static let apiKey = "242be8cc853e2f3e7f2a12687b951da8"
     static let posterURL = "https://image.tmdb.org/t/p/w300_and_h450_bestv2/"
-    static let basePath = "https://api.themoviedb.org/3/%@&api_key=242be8cc853e2f3e7f2a12687b951da8"
-    static let discover_path = "discover/movie?primary_release_year=%@&sort_by=vote_average.desc&page=%@"
 }
 
 extension String {

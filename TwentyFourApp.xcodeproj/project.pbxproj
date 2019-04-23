@@ -18,7 +18,6 @@
 		3D6FA0A722684EA9009FB696 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A422684EA9009FB696 /* Constants.swift */; };
 		3D6FA0A822684EA9009FB696 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A522684EA9009FB696 /* APIClient.swift */; };
 		3D6FA0A922684EA9009FB696 /* ProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */; };
-		3D7F7CC0226CE5190043F16F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3D7F7CBF226CE5190043F16F /* README.md */; };
 		3DB819612264CFB100CA9C50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB819602264CFB100CA9C50 /* Assets.xcassets */; };
 		3DB8196F2264CFB100CA9C50 /* TwentyFourAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB8196E2264CFB100CA9C50 /* TwentyFourAppTests.swift */; };
 		3DB8198B2264D3F000CA9C50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DB819812264D3F000CA9C50 /* LaunchScreen.storyboard */; };
@@ -75,7 +74,6 @@
 		3D6FA0A422684EA9009FB696 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D6FA0A522684EA9009FB696 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3D6FA0A622684EA9009FB696 /* ProgressLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressLoader.swift; sourceTree = "<group>"; };
-		3D7F7CBF226CE5190043F16F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3DB819562264CFAE00CA9C50 /* TwentyFourApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwentyFourApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DB819602264CFB100CA9C50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DB819652264CFB100CA9C50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 				3DB819602264CFB100CA9C50 /* Assets.xcassets */,
 				3DB819652264CFB100CA9C50 /* Info.plist */,
 				3DB8199A2264DD6900CA9C50 /* Localizable.strings */,
-				3D7F7CBF226CE5190043F16F /* README.md */,
 			);
 			path = TwentyFourApp;
 			sourceTree = "<group>";
@@ -319,7 +316,6 @@
 			files = (
 				3DB8198C2264D3F000CA9C50 /* Main.storyboard in Resources */,
 				3DB8199C2264DD6900CA9C50 /* Localizable.strings in Resources */,
-				3D7F7CC0226CE5190043F16F /* README.md in Resources */,
 				3DB819612264CFB100CA9C50 /* Assets.xcassets in Resources */,
 				3DB8198B2264D3F000CA9C50 /* LaunchScreen.storyboard in Resources */,
 			);

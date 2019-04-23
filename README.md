@@ -1,5 +1,5 @@
 # Overview
-A Sample Application that shows list of current & upcoming popular movies. The movies list is shown in the application is fetched from `http://themoviedb.org/`.  App displays ten movies on one view with an option for the user to navigate to next or previous pages. 
+A Sample Application that shows list of current & upcoming popular movies. The movies list is shown in the application is fetched from http://themoviedb.org/.  App displays ten movies on one view with an option for the user to navigate to next or previous pages. 
 The application gives user the following two options
 
 1. Popular Movies

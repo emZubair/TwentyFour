@@ -87,6 +87,9 @@ class MovieCatalogViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(animated)
         updateTitle(with: "MOVIE_CATALOG".localize())
+        let bounds = UIScreen.main.bounds
+        let frame = searchBar.frame
+        searchBar.frame = CGRect(origin: frame.origin, size: CGSize(width: bounds.width * 0.60, height: searchBar.bounds.height))
     }
     
     //MARK: - private Methods

@@ -17,18 +17,36 @@ final class APIClient {
     //MARK: - Private Methods
     private init(){}
     
+    
     /**
-     make a request for a given API path string
+     makes a Parameters for a given dictionary of params
      - parameters:
-        - api: path for the API to target
+        - params: dictionary of params defaults to nil
+        - apiKey: flag to include api_key or not defaults to true
      */
-    fileprivate func makeRequest(for api:String) -> URLRequest? {
-        let apiPath = String(format: TwentyFourConstants.basePath, api)
+    fileprivate func makeParameters(from params:[String:Any]? = nil, apiKey:Bool = true) -> Parameters {
+        var query:Parameters = [:]
+        if let params = params {
+            for (key,value) in params{
+                query[key] = value
+            }
+        }
+        if apiKey {
+            query["api_key"] = TwentyFourConstants.apiKey
+        }
+        return query
+    }
+    
+    /**
+     makes a URL for a given API path string
+     - parameters:
+     - api: path for the API to target
+     */
+    fileprivate func url(for api:String) -> URL? {
+        let apiPath = TwentyFourConstants.basePath + api
         if let apiURL = URL(string: apiPath) {
             print("Fetch URL:\(apiURL.absoluteString)")
-            var request = URLRequest(url: apiURL)
-            request.timeoutInterval = TIME_OUT_INTERVAL
-            return request
+            return apiURL
         }
         return nil
     }
@@ -55,9 +73,9 @@ final class APIClient {
     
     /// Fetches list of Popular movies with specified page number
     func getPopularMovies(page:Int, completion: @escaping (Int,Int,[Movie]?)-> Void) {
-        let popular_api_path = String(format: TwentyFourConstants.popularPath, page)
-        if let request = makeRequest(for: popular_api_path) {
-            Alamofire.request(request).validate().responseJSON { response in
+        let parameters = makeParameters(from: ["page":page])
+        if let apiURL = url(for: TwentyFourConstants.popularAPI) {
+            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { (response) in
                 self.parseAPI(response, completion: completion)
             }
         }
@@ -65,9 +83,9 @@ final class APIClient {
     
     /// Fetches list of movies in specified release year & page number
     func searchMovie(by year:String, page:Int = 1, completion: @escaping (Int,Int,[Movie]?)-> Void) {
-        let discover_api_path = String(format: TwentyFourConstants.discover_path, arguments: [year ,String(page)])
-        if let request = makeRequest(for: discover_api_path) {
-            Alamofire.request(request).validate().responseJSON { response in
+        let parameters = makeParameters(from: ["page":page,"primary_release_year":year,"sort_by":"vote_average.desc"])
+        if let apiURL = url(for: TwentyFourConstants.discoverAPI) {
+            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { response in
                 self.parseAPI(response, completion: completion)
             }
         }
@@ -75,9 +93,10 @@ final class APIClient {
     
     /// Fetches details for the provided movie ID
     func getDetailsForMovie(with id:String, completion:@escaping (MovieDetails?)->Void){
-        let detail_api_path = String(format: TwentyFourConstants.movie_detail, id)
-        if let request = makeRequest(for: detail_api_path) {
-            Alamofire.request(request).validate().responseJSON { response in
+        let detail_api_path = String(format: TwentyFourConstants.movieDetailAPI, id)
+        let parameters = makeParameters()
+        if let apiURL = url(for: detail_api_path) {
+            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { (response) in
                 guard response.result.isSuccess else {
                     completion(nil)
                     return
@@ -97,8 +116,9 @@ final class APIClient {
     /// Fetches YouTube Identifier for the provided movie ID
     func getYouTubeIDFor(movie:String, completion: @escaping (String?)-> Void) {
         let youtube_id_api_path = String(format: TwentyFourConstants.youTubeLinkAPI, movie)
-        if let request = makeRequest(for: youtube_id_api_path) {
-            Alamofire.request(request).validate().responseJSON { response in
+        let parameters = makeParameters()
+        if let apiURL = url(for: youtube_id_api_path) {
+            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { response in
                 guard response.result.isSuccess else {
                     completion(nil)
                     return

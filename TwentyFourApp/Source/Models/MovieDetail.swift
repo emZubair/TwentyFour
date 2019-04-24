@@ -7,17 +7,70 @@
 //
 
 import Foundation
-typealias Codeable = Codable & Decodable
 
-public struct Movie {
-    let id:Int
-    let title:String
-    let poster:String
+public struct Movie : Decodable{
+    
+    var id:Int?
+    var title:String?
+    var poster:String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case poster = "poster_path"
+    }
     
     init(json:[String:Any]) {
         id = json["id"] as? Int ?? -1
         title = json["title"] as? String ?? ""
         poster = json["poster_path"] as? String ?? ""
+    }
+}
+
+public struct Movies: Decodable {
+    var page: Int
+    let totalPages:Int
+    let listOfMovies:[Movie]
+    
+    func hasBackPage() -> Bool {
+        return page > 1
+    }
+    
+    func hasNextPage() -> Bool {
+        return page < totalPages
+    }
+    
+    func hasMovies() -> Bool {
+        return listOfMovies.count > 0
+    }
+    
+    mutating func incrementPage() {
+        page += 1
+    }
+    
+    mutating func decrementPage() {
+        page -= 1
+    }
+    
+    mutating func resetPage() {
+        page = 1
+    }
+    
+    func movie(for index:Int) -> Movie? {
+        if index < listOfMovies.count {
+            return listOfMovies[index]
+        }
+        return nil
+    }
+    
+    func moviesCount() -> Int {
+        return listOfMovies.count
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case totalPages = "total_pages"
+        case listOfMovies = "results"
     }
 }
 
@@ -27,6 +80,7 @@ public struct MovieDetails {
     let date:String
     let overview:String
     let trailerURL:String?
+    
     
     
     init(json:[String:Any]) {
@@ -44,14 +98,14 @@ public struct MovieDetails {
     }
     
     func id() -> Int {
-        return movie.id
+        return movie.id ?? 1
     }
-    
+
     func title() -> String {
-        return movie.title
+        return movie.title ?? ""
     }
-    
+
     func poster() -> String {
-        return movie.poster
+        return movie.poster ?? ""
     }
 }

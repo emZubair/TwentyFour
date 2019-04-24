@@ -18,9 +18,8 @@ class MovieCatalogViewController: BaseViewController {
     @IBOutlet weak var previousBtn: UIBarButtonItem!
     fileprivate var refreshControl:UIRefreshControl!
     
-    var totalPages = 1
-    var movies:[Movie]?
-    var currentPage = 1
+
+    var movies:Movies? = nil
     var year:String? = nil
     var cellHeight:CGFloat!
     var networkStatus:NetworkStatusUtility!
@@ -29,8 +28,6 @@ class MovieCatalogViewController: BaseViewController {
         super.viewDidLoad()
         networkStatus = NetworkStatusUtility()
         networkStatus.startNetworkReachabilityObserver()
-        currentPage = 1
-        totalPages = 1
         searchBar.translatesAutoresizingMaskIntoConstraints = true
         catalogTableView.delegate = self
         catalogTableView.dataSource = self
@@ -67,7 +64,7 @@ class MovieCatalogViewController: BaseViewController {
     /// Refersh content via Pull & refresh
     @objc func refresh(sender:AnyObject) {
         if networkStatus.shouldProceed(from: self) {
-            currentPage = 1
+            movies?.resetPage()
             loadMoviesCatalog()
         }else {
             stopResfreshin()
@@ -105,12 +102,12 @@ class MovieCatalogViewController: BaseViewController {
     fileprivate func updateButtonsAndBar() {
         searchBar.text = ""
         searchBar.resignFirstResponder()
-        previousBtn.isEnabled = currentPage > 1 ? true : false
-        nextBtn.isEnabled = currentPage < totalPages ? true : false
+        previousBtn.isEnabled = movies?.hasBackPage() ?? false
+        nextBtn.isEnabled = movies?.hasNextPage() ?? false
     }
     
     fileprivate func reloadTableView() {
-        let progress = String(format: "SHOWING_MOVIES".localize(), self.currentPage, self.totalPages)
+        let progress = String(format: "SHOWING_MOVIES".localize(), movies?.page ?? 1, movies?.totalPages ?? 1)
         makeBasicToastWithForTableViews(text: progress, duration: 1)
         catalogTableView.reloadData()
         ProgressLoader.hideProgressLoader()
@@ -123,31 +120,29 @@ class MovieCatalogViewController: BaseViewController {
         }
         searchBar.resignFirstResponder()
         ProgressLoader.showProgressLoader(with: "LOADING_MOVIES".localize())
-        APIClient.sharedInstance.getPopularMovies(page: currentPage) { page,totalPages, fetchedMovies in
-            self.updateViewDataWith(movies: fetchedMovies, page: page, totalPages: totalPages, title: "MOVIE_CATALOG".localize())
+        APIClient.sharedInstance.getPopularMovies(page: movies?.page ?? 1) { fetchedMovies in
+            self.updateViewDataWith(movies: fetchedMovies, title: "MOVIE_CATALOG".localize())
         }
     }
     
     
      /// Loads movies by year
-    fileprivate func loadMovies(by year:String, page number:Int) {
+    fileprivate func loadMovies(by year:String) {
         let message = String(format: "LOADING_YEAR".localize(), year)
         ProgressLoader.showProgressLoader(with: message)
-        APIClient.sharedInstance.searchMovie(by: year, page: number) { page,totalPages, fetchedMovies in
+        APIClient.sharedInstance.searchMovie(by: year, page: movies?.page ?? 1) { fetchedMovies in
             let view_title = String(format: "RELEASED_IN_YEAR".localize(), year)
-            self.updateViewDataWith(movies: fetchedMovies, page: page, totalPages: totalPages, title: view_title)
+            self.updateViewDataWith(movies: fetchedMovies, title: view_title)
         }
     }
     
     
     /// Populates tableView with fetched data
-    fileprivate func updateViewDataWith(movies:[Movie]?, page:Int, totalPages:Int, title:String) {
+    fileprivate func updateViewDataWith(movies:Movies?, title:String) {
         ProgressLoader.hideProgressLoader()
         stopResfreshin()
         if let movies = movies{
-            if movies.count > 1 {
-                self.currentPage = page
-                self.totalPages = totalPages
+            if movies.hasMovies() {
                 self.movies = movies
                 self.reloadTableView()
                 self.updateTitle(with: title)
@@ -170,8 +165,8 @@ class MovieCatalogViewController: BaseViewController {
     
     fileprivate func showDetailsForMovieSelected(at index:Int) {
         if networkStatus.shouldProceed(from: self) {
-            if let selectedMovie = movies?[index] {
-                let movieID = selectedMovie.id
+            if let movies = movies, let movie = movies.movie(for: index) {
+                let movieID = movie.id
                 let detailViewController = ViewControllerLoader.loadViewController(of: MovieDetailsViewController.self, with: .MovieDetailsViewController)
                 detailViewController.movieID = movieID
                 self.navigationController?.show(detailViewController, sender: self)
@@ -184,18 +179,18 @@ class MovieCatalogViewController: BaseViewController {
      Before fetching check which API to fetch from
     */
     fileprivate func loadPageInSelectedCategory() {
-        showingPopularMovies() ? loadMoviesCatalog() : loadMovies(by: year!, page: currentPage)
+        showingPopularMovies() ? loadMoviesCatalog() : loadMovies(by: year!)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
         if networkStatus.shouldProceed(from: self) {
-            currentPage += 1
+            movies?.incrementPage()
             loadPageInSelectedCategory()
         }
     }
     @IBAction func previousButtonTapped(_ sender: Any) {
         if networkStatus.shouldProceed(from: self) {
-            currentPage -= 1
+            movies?.decrementPage()
             loadPageInSelectedCategory()
         }
     }
@@ -217,7 +212,7 @@ class MovieCatalogViewController: BaseViewController {
     @objc func doneTapped() {
         if let year = searchBar.text, year.count == 4 {
             if networkStatus.shouldProceed(from: self) {
-                loadMovies(by: year, page: 1)
+                loadMovies(by: year)
                 searchBar.resignFirstResponder()
                 searchBar.text = ""
             }
@@ -232,13 +227,13 @@ class MovieCatalogViewController: BaseViewController {
 extension MovieCatalogViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies?.count ?? 0
+        return movies?.moviesCount() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MovieCatalogCell.identifier, for: indexPath) as! MovieCatalogCell
-        if let movies = movies {
-            cell.updateCellUI(with: movies[indexPath.row])
+        if let movies = movies, let movie = movies.movie(for: indexPath.row) {
+            cell.updateCellUI(with: movie)
         }
         return cell
     }

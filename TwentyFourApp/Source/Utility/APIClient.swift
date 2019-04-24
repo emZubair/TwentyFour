@@ -24,13 +24,8 @@ final class APIClient {
         - params: dictionary of params defaults to nil
         - apiKey: flag to include api_key or not defaults to true
      */
-    fileprivate func makeParameters(from params:[String:Any]? = nil, apiKey:Bool = true) -> Parameters {
-        var query:Parameters = [:]
-        if let params = params {
-            for (key,value) in params{
-                query[key] = value
-            }
-        }
+    fileprivate func makeParameters(from params:[String:Any] = [:], apiKey:Bool = true) -> Parameters {
+        var query = params as Parameters
         if apiKey {
             query["api_key"] = TwentyFourConstants.apiKey
         }
@@ -40,7 +35,7 @@ final class APIClient {
     /**
      makes a URL for a given API path string
      - parameters:
-     - api: path for the API to target
+        - api: path for the API to target
      */
     fileprivate func url(for api:String) -> URL? {
         let apiPath = TwentyFourConstants.basePath + api
@@ -51,41 +46,59 @@ final class APIClient {
         return nil
     }
     
+    /**
+     returns a DataRequest created using the list of parameters
+     - parameters:
+        - url: api url
+        - method: HTTPMethod for the request
+        - paramteters: optional Parameters for the reqeust
+        - headers: optional HTTPHeaders for the request
+     */
+    fileprivate func dataRequest(url: URL, method:HTTPMethod, paramteters:Parameters? = nil, headers:HTTPHeaders? = nil) -> DataRequest{
+        let request = Alamofire.request(url, method: method, parameters: paramteters, encoding: URLEncoding(destination: .queryString), headers: headers)
+        return request
+    }
+    
     /// Parses API response data and calls completion closures
-    fileprivate func parseAPI(_ response:DataResponse<Any>, completion: @escaping(Int,Int,[Movie]?) -> Void) {
-        guard response.result.isSuccess else {
-            completion(-1,-1, nil)
-            return
-        }
-        guard let value = response.result.value as? [String: Any],
-            let results = value["results"] as? [[String: Any]] else {
-                print("Malformed data received from fetch popular service")
-                completion(-1,-1,nil)
+    fileprivate func parseAPI(_ response:DataResponse<Any>, completion: @escaping(Movies?) -> Void) {
+        if let status = response.response?.statusCode {
+            switch(status){
+            case 200 ... 299:
+                print("example success")
+            default:
+                print("error with response status: \(status)")
+                completion(nil)
                 return
+            }
         }
-        let movies = results.compactMap{ movie  in
-            Movie(json: movie)
+        if let data = response.data {
+            do {
+                let movies = try JSONDecoder().decode(Movies.self, from: data)
+                completion(movies)
+            }
+            catch {
+                print("Error while parsing the data")
+                completion(nil)
+            }
+            
         }
-        let page = value["page"] as? Int ?? 1
-        let total_pages = value["total_pages"] as? Int ?? 1
-        completion(page,total_pages,movies)
     }
     
     /// Fetches list of Popular movies with specified page number
-    func getPopularMovies(page:Int, completion: @escaping (Int,Int,[Movie]?)-> Void) {
+    func getPopularMovies(page:Int, completion: @escaping (Movies?)-> Void) {
         let parameters = makeParameters(from: ["page":page])
         if let apiURL = url(for: TwentyFourConstants.popularAPI) {
-            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { (response) in
+            dataRequest(url: apiURL, method: .get, paramteters: parameters).validate().responseJSON { (response) in
                 self.parseAPI(response, completion: completion)
             }
         }
     }
     
     /// Fetches list of movies in specified release year & page number
-    func searchMovie(by year:String, page:Int = 1, completion: @escaping (Int,Int,[Movie]?)-> Void) {
+    func searchMovie(by year:String, page:Int = 1, completion: @escaping (Movies?)-> Void) {
         let parameters = makeParameters(from: ["page":page,"primary_release_year":year,"sort_by":"vote_average.desc"])
         if let apiURL = url(for: TwentyFourConstants.discoverAPI) {
-            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { response in
+            dataRequest(url: apiURL, method: .get, paramteters: parameters).validate().responseJSON { response in
                 self.parseAPI(response, completion: completion)
             }
         }
@@ -96,7 +109,7 @@ final class APIClient {
         let detail_api_path = String(format: TwentyFourConstants.movieDetailAPI, id)
         let parameters = makeParameters()
         if let apiURL = url(for: detail_api_path) {
-            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { (response) in
+            dataRequest(url: apiURL, method: .get, paramteters: parameters).validate().responseJSON { (response) in
                 guard response.result.isSuccess else {
                     completion(nil)
                     return
@@ -118,7 +131,7 @@ final class APIClient {
         let youtube_id_api_path = String(format: TwentyFourConstants.youTubeLinkAPI, movie)
         let parameters = makeParameters()
         if let apiURL = url(for: youtube_id_api_path) {
-            Alamofire.request(apiURL, method: .get, parameters: parameters, encoding: URLEncoding(destination: .queryString)).validate().responseJSON { response in
+            dataRequest(url: apiURL, method: .get, paramteters: parameters).validate().responseJSON { response in
                 guard response.result.isSuccess else {
                     completion(nil)
                     return

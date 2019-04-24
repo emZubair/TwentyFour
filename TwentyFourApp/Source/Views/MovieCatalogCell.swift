@@ -18,7 +18,7 @@ class MovieCatalogCell : UITableViewCell {
     func updateCellUI(with details:Movie) {
         titleLabel.text = details.title
         titleLabel.font = UIFont.systemFont(ofSize: self.bounds.height * 0.25)
-        if let url = URL(string: TwentyFourConstants.posterURL+details.poster){
+        if let posterPath = details.poster, let url = URL(string: TwentyFourConstants.posterURL+posterPath){
             posterImageView.kf.setImage(with: url)
         }
         

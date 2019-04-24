@@ -141,7 +141,7 @@ class MovieCatalogViewController: BaseViewController {
     fileprivate func updateViewDataWith(movies:Movies?, title:String) {
         ProgressLoader.hideProgressLoader()
         stopResfreshin()
-        if let movies = movies{
+        if var movies = movies{
             if movies.hasMovies() {
                 self.movies = movies
                 self.reloadTableView()

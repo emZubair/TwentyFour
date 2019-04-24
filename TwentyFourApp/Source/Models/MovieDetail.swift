@@ -30,7 +30,7 @@ public struct Movie : Decodable{
 public struct Movies: Decodable {
     var page: Int
     let totalPages:Int
-    let listOfMovies:[Movie]
+    var listOfMovies:[Movie]
     
     func hasBackPage() -> Bool {
         return page > 1
@@ -40,7 +40,13 @@ public struct Movies: Decodable {
         return page < totalPages
     }
     
-    func hasMovies() -> Bool {
+    
+    fileprivate mutating func removeMoviesWithNullPoster() {
+        listOfMovies =  listOfMovies.filter { movie in movie.poster != nil}
+    }
+    
+    mutating func hasMovies() -> Bool {
+        removeMoviesWithNullPoster()
         return listOfMovies.count > 0
     }
     
